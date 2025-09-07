@@ -1,12 +1,19 @@
+#define ARDUINO_ID "robotarm"
+#define BAUD_RATE 9600
+
 #define START_BYTE 0xAA
 #define CHECKSUM_MASK 0xFF
-#define SERIAL_PORT 9600
-#define PACKET_SIZE 5 // START_BYTE 
+#define PACKET_SIZE 5
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(SERIAL_PORT);
-  Serial.println("Arduino Serial Stream Established");
+  Serial.begin(BAUD_RATE);
+  
+  // Wait until serial port is actually ready
+  while (!Serial) { ; }
+
+  // Notify Python that Arduino is ready
+  Serial.println("READY");
 }
 
 void loop() {
@@ -20,6 +27,8 @@ void loop() {
       byte checksum = Serial.read();
 
       byte computedChecksum = (cmd + joint + angle) & CHECKSUM_MASK;
+
+      Serial.println("Received packet");
 
       if (checksum == computedChecksum) {
         Serial.println("Processing command");
