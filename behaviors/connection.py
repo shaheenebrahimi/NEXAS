@@ -16,6 +16,7 @@ class SerialConnection:
         self.device_id = SerialConnection.get_device(name)
         self.ser = serial.Serial(self.device_id, BAUD_RATE, timeout=TIMEOUT)
         self.wait_for_ready()
+        self.ser.reset_input_buffer()
 
     def wait_for_ready(self):
         print("Waiting for Arduino to be ready...", end="")

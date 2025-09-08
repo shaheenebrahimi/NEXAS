@@ -1,13 +1,22 @@
-#define ARDUINO_ID "robotarm"
-#define BAUD_RATE 9600
+#include <Servo.h>
 
-#define START_BYTE 0xAA
-#define CHECKSUM_MASK 0xFF
-#define PACKET_SIZE 5
+// Constants
+const unsigned long BAUD_RATE = 9600;
+const uint8_t START_BYTE = 0xAA;
+const uint8_t CHECKSUM_MASK = 0xFF;
+const uint8_t PACKET_SIZE = 5;
+
+const int servoPin = 9;
+
+// Declarations
+Servo limb;
 
 void setup() {
-  // put your setup code here, to run once:
+  // Initialize serial connection
   Serial.begin(BAUD_RATE);
+
+  // Attach pins
+  limb.attach(servoPin);
   
   // Wait until serial port is actually ready
   while (!Serial) { ; }
@@ -19,19 +28,21 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   if (Serial.available() >= PACKET_SIZE) {
-    byte start = Serial.read();
+    uint8_t start = Serial.read();
     if (start == START_BYTE) {
-      byte cmd = Serial.read();
-      byte joint = Serial.read();
-      byte angle = Serial.read();
-      byte checksum = Serial.read();
+      uint8_t cmd = Serial.read();
+      uint8_t joint = Serial.read();
+      uint8_t angle = Serial.read();
+      uint8_t checksum = Serial.read();
 
-      byte computedChecksum = (cmd + joint + angle) & CHECKSUM_MASK;
+      uint8_t computedChecksum = (cmd + joint + angle) & CHECKSUM_MASK;
 
-      Serial.println("Received packet");
+      // Serial.println("Received packet");
 
       if (checksum == computedChecksum) {
         Serial.println("Processing command");
+        angle = constrain(angle, 0, 180);
+        limb.write(angle);
       }
       else {
         Serial.println("Failed Checksum");
