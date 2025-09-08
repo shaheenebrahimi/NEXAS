@@ -3,6 +3,10 @@ from pathlib import Path
 
 class ArduinoProtocolGenerator:
     @staticmethod
+    def get_dir():
+        return "controller/"
+
+    @staticmethod
     def get_header():
         return "// Auto-generated file. Do not edit manually.\n\n"
 
@@ -17,7 +21,12 @@ class ArduinoProtocolGenerator:
         line += "\n};\n"
         return line
 
+
 class PythonProtocolGenerator:
+    @staticmethod
+    def get_dir():
+        return "behaviors/"
+
     @staticmethod
     def get_header():
         return "# Auto-generated file. Do not edit manually.\n\n"
@@ -32,14 +41,14 @@ class PythonProtocolGenerator:
         line += "".join([f"   {name} = {val}\n" for name, val in value.items()])
         return line
     
+
 def generate_protocol_files():
-    dirname = "protocol/"
     
-    with open(dirname + "protocol.yaml", "r") as f:
+    with open("protocol/protocol.yaml", "r") as f:
         spec = yaml.safe_load(f)
 
     for pfile, generator in [("protocol.h", ArduinoProtocolGenerator), ("protocol.py", PythonProtocolGenerator)]:
-        out_file = Path(dirname + pfile)
+        out_file = Path(generator.get_dir() + pfile)
         lines = {"constants": [], "enums": []}
         for key, value in spec.items():
             if isinstance(value, dict):
@@ -53,4 +62,4 @@ def generate_protocol_files():
             f.write("\n")
             f.write("".join(lines["enums"]))
         
-        print(f"Wrote protocol to {dirname + pfile}")
+        print(f"Wrote protocol to {out_file}")

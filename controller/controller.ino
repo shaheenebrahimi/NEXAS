@@ -1,10 +1,6 @@
 #include <Servo.h>
 
-// Constants
-const unsigned long BAUD_RATE = 9600;
-const uint8_t START_BYTE = 0xAA;
-const uint8_t CHECKSUM_MASK = 0xFF;
-const uint8_t PACKET_SIZE = 5;
+#include "protocol.h"
 
 const int servoPin = 9;
 
