@@ -1,17 +1,20 @@
 #include <Servo.h>
 #include "protocol.h"
-#include "ServoConfig.h"
 #include "Robot.h"
 
+// Structs
 struct Packet {
     uint8_t command;
     uint8_t joint;
     uint8_t angle;
 };
 
-// Single servo setup
-ServoConfig config(9, "base");
-Robot robot(config);
+// Config
+ServoConfig config[] = {
+  ServoConfig(9, "base")
+};
+int numServos = sizeof(config) / sizeof(config[0]);
+Robot robot(config, numServos);
 
 Packet readPacket() {
     if (Serial.available() < PACKET_SIZE) return {0,0,0};  // wait until full packet
@@ -67,7 +70,7 @@ void loop() {
         case COMMANDS::MOVE:
             Serial.print(" - Moving servo to angle: ");
             Serial.println(packet.angle);
-            robot.moveJoint(packet.angle);
+            robot.moveJoint(packet.joint, packet.angle);
             break;
         default:
             break;

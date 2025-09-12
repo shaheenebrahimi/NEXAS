@@ -6,7 +6,7 @@ if __name__ == "__main__":
     generate_protocol_files()
 
     conn = SerialConnection(name="arm")
-    conn.send_packet(proto.COMMANDS.MOVE, 0x00, 80)
+    conn.send_packet(proto.COMMANDS.MOVE, 0x00, 50)
 
     line = conn.ser.readline()  # reads until \n or timeout
     print("Arduino says:", line.decode().strip())
