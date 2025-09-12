@@ -16,7 +16,7 @@ class ArduinoProtocolGenerator:
 
     @staticmethod
     def parse_enum(key, value: dict):
-        line = f"enum {key} {{\n"
+        line = f"enum class {key} {{\n"
         line += ",\n".join([f"   {name} = {val}" for name, val in value.items()])
         line += "\n};\n"
         return line

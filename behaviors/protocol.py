@@ -9,3 +9,8 @@ class COMMANDS:
    MOVE = 1
    STOP = 2
    CALIBRATE = 3
+class JOINTS:
+   BASE = 1
+   LOWER = 2
+   UPPER = 3
+   GRIPPER = 4
