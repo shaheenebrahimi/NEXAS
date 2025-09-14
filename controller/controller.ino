@@ -2,19 +2,20 @@
 #include "protocol.h"
 #include "Robot.h"
 
+// Config
+ServoConfig config[NUM_JOINTS] = {
+  ServoConfig(4, 9, "base"), // length=4, pin=9
+  ServoConfig(4, 10, "elbow"),  // length=4, pin=10
+  ServoConfig(1, 11, "gripper"),  // length=1, pin=11
+};
+Robot robot(config);
+
 // Structs
 struct Packet {
     uint8_t command;
     uint8_t joint;
     uint8_t angle;
 };
-
-// Config
-ServoConfig config[] = {
-  ServoConfig(9, "base")
-};
-int numServos = sizeof(config) / sizeof(config[0]);
-Robot robot(config, numServos);
 
 Packet readPacket() {
     if (Serial.available() < PACKET_SIZE) return {0,0,0};  // wait until full packet

@@ -8,7 +8,7 @@ class ArduinoProtocolGenerator:
 
     @staticmethod
     def get_header():
-        return "// Auto-generated file. Do not edit manually.\n\n"
+        return "// Auto-generated file. Do not edit manually.\n#pragma once\n\n"
 
     @staticmethod
     def parse_constant(key, value: str):
